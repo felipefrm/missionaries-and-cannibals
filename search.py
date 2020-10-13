@@ -1,6 +1,7 @@
 from State import *
 from Node import *
 from constants import *
+from utils import *
 import collections
 
 def valid_state(initial_margin,final_margin):
@@ -24,29 +25,29 @@ def dfs(node, depth):
         return False
 
     nodes[DEPTH_LIMIT].append(node)
+    # open(DIRS['DATA']).write(nodes)
     if not valid_state(*node.value):
-        node.cluster='invalid'
+        node.label='invalid'
         return False
 
     parent_node = node.parent
     if parent_node:
         while True:
             if node.value[0] == parent_node.value[0] and node.value[1] == parent_node.value[1]:
-                node.cluster='repeated'
+                node.label='repeated'
                 return False
             if parent_node.parent == None:
                 break
             parent_node = parent_node.parent
 
-    print(depth*'\t',node.value[0],node.value[1],depth)
+    # print(depth*'\t',node.value[0],node.value[1],depth)
     if valid_solution(*node.value):
-        # nodes.append(node,"final")
-        node.cluster='final'
+        node.label='final'
         global LAST_NODE
         LAST_NODE = node
         return True
 
-    node.cluster='valid'
+    node.label='valid'
     # Do more moves
     for move in MOVES:
         # Do the move
@@ -55,6 +56,7 @@ def dfs(node, depth):
         else:
             new_node = Node((node.value[0]+move,node.value[1]-move),node)
 
+        new_node.parent = node
         # Check the move
         # nodes.append([node,"valid"])
         result = dfs(new_node,depth+1)
@@ -71,14 +73,17 @@ LAST_NODE = None
 while True:
     DEPTH_LIMIT += 1
     if dfs(INITIAL_NODE,0):
-        print("Solution!!")
+        # print("Solution!!")
         solution = True
         break
     if solution:
         break
 parent_node = LAST_NODE
 while True:
-    print(parent_node.value[0],parent_node.value[1])
+    # print(parent_node.value[0],parent_node.value[1])
     if parent_node.parent == None:
         break
     parent_node = parent_node.parent
+
+# print(nodes[5])
+# print(dicts_to_graphjson(*nodes_to_dicts(nodes[12])))
