@@ -1,6 +1,7 @@
 from State import *
 from Node import *
 from constants import *
+import collections
 
 def valid_state(initial_margin,final_margin):
     if (initial_margin.num_missionaries < initial_margin.num_cannibals and initial_margin.num_missionaries) or \
@@ -22,14 +23,30 @@ def dfs(node, depth):
     if depth == DEPTH_LIMIT:
         return False
 
+    nodes[DEPTH_LIMIT].append(node)
     if not valid_state(*node.value):
+        node.cluster='invalid'
         return False
+
+    parent_node = node.parent
+    if parent_node:
+        while True:
+            if node.value[0] == parent_node.value[0] and node.value[1] == parent_node.value[1]:
+                node.cluster='repeated'
+                return False
+            if parent_node.parent == None:
+                break
+            parent_node = parent_node.parent
+
     print(depth*'\t',node.value[0],node.value[1],depth)
     if valid_solution(*node.value):
+        # nodes.append(node,"final")
+        node.cluster='final'
         global LAST_NODE
         LAST_NODE = node
         return True
 
+    node.cluster='valid'
     # Do more moves
     for move in MOVES:
         # Do the move
@@ -39,23 +56,17 @@ def dfs(node, depth):
             new_node = Node((node.value[0]+move,node.value[1]-move),node)
 
         # Check the move
-        repeated_move=False
-        parent_node = node.parent
-        if parent_node:
-            while True:
-                if new_node.value[0] == parent_node.value[0] and new_node.value[1] == parent_node.value[1]:
-                    repeated_move=True
-                    break
-                if parent_node.parent == None:
-                    break
-                parent_node = parent_node.parent
-        if not repeated_move:
-            result = dfs(new_node,depth+1)
-            if result:
-                return True
+        # nodes.append([node,"valid"])
+        result = dfs(new_node,depth+1)
+        if result:
+            return True
+        # else:
+        #     nodes.append([node,"repeated"])
+            
     return False
 DEPTH_LIMIT = 0
 solution = False
+nodes = collections.defaultdict(list)
 LAST_NODE = None
 while True:
     DEPTH_LIMIT += 1
@@ -65,7 +76,6 @@ while True:
         break
     if solution:
         break
-
 parent_node = LAST_NODE
 while True:
     print(parent_node.value[0],parent_node.value[1])
