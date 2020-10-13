@@ -17,61 +17,62 @@ def valid_solution(initial_margin,final_margin):
         return True
     return False
 
-def do_move(node, move, depth):
+def dfs(node, depth):
     if depth == DEPTH_LIMIT:
         return False
-    # Do the move
-    if node.value[0].num_boats:
-        new_node = Node((node.value[0]-move,node.value[1]+move),node)
-    else:
-        new_node = Node((node.value[0]+move,node.value[1]-move),node)
 
-    # Check the move
-    if not valid_state(*new_node.value):
+    if not valid_state(*node.value):
         return False
-    print(depth*'\t',new_node.value[0],new_node.value[1],depth)
-    if valid_solution(*new_node.value):
+    print(depth*'\t',node.value[0],node.value[1],depth)
+    if valid_solution(*node.value):
         global LAST_NODE
-        LAST_NODE = new_node
+        LAST_NODE = node
         return True
 
-    parent_node = node.parent
-    if parent_node:
-        while True:
-            if new_node.value[0] == parent_node.value[0] and new_node.value[1] == parent_node.value[1]:
-                return False
-            if parent_node.parent == None:
-                break
-            parent_node = parent_node.parent
-
     # Do more moves
-    for move in moves:
-        result = do_move(new_node,move,depth+1)
-        if result:
-            return True
+    for move in MOVES:
+        # Do the move
+        if node.value[0].num_boats:
+            new_node = Node((node.value[0]-move,node.value[1]+move),node)
+        else:
+            new_node = Node((node.value[0]+move,node.value[1]-move),node)
+
+        # Check the move
+        repeated_move=False
+        parent_node = node.parent
+        if parent_node:
+            while True:
+                if new_node.value[0] == parent_node.value[0] and new_node.value[1] == parent_node.value[1]:
+                    repeated_move=True
+                    break
+                if parent_node.parent == None:
+                    break
+                parent_node = parent_node.parent
+        if not repeated_move:
+            result = dfs(new_node,depth+1)
+            if result:
+                return True
     return False
 
 initial_node = Node((State(3,3,1),State(0,0,0)))
 
 FINAL_STATE = State(3,3,1)
-moves = [
+MOVES = [
     State(2,0,1),
     State(1,0,1),
     State(0,1,1),
     State(0,2,1),
     State(1,1,1),
 ]
-search_space = {}
 DEPTH_LIMIT = 0
 solution = False
 LAST_NODE = None
 while True:
     DEPTH_LIMIT += 1
-    for move in moves:
-        if do_move(initial_node,move,0):
-            print("Solution!!")
-            solution = True
-            break
+    if dfs(initial_node,0):
+        print("Solution!!")
+        solution = True
+        break
     if solution:
         break
 
