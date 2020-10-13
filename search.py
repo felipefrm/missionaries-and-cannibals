@@ -1,5 +1,6 @@
 from State import *
 from Node import *
+from constants import *
 
 def valid_state(initial_margin,final_margin):
     if (initial_margin.num_missionaries < initial_margin.num_cannibals and initial_margin.num_missionaries) or \
@@ -53,23 +54,12 @@ def dfs(node, depth):
             if result:
                 return True
     return False
-
-initial_node = Node((State(3,3,1),State(0,0,0)))
-
-FINAL_STATE = State(3,3,1)
-MOVES = [
-    State(2,0,1),
-    State(1,0,1),
-    State(0,1,1),
-    State(0,2,1),
-    State(1,1,1),
-]
 DEPTH_LIMIT = 0
 solution = False
 LAST_NODE = None
 while True:
     DEPTH_LIMIT += 1
-    if dfs(initial_node,0):
+    if dfs(INITIAL_NODE,0):
         print("Solution!!")
         solution = True
         break
