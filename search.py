@@ -20,26 +20,17 @@ def valid_solution(initial_margin,final_margin):
 def do_move(node, move, depth):
     if depth == DEPTH_LIMIT:
         return False
-    # if not valid_state(initial_margin, final_margin):
-    #     print(initial_margin, final_margin)
-    #     return False
-    # if valid_solution(initial_margin,final_margin):
-    #     return True
     # Do the move
-    # print(initial_margin, final_margin, move)
     if node.value[0].num_boats:
         new_node = Node((node.value[0]-move,node.value[1]+move),node)
     else:
         new_node = Node((node.value[0]+move,node.value[1]-move),node)
-        # new_initial_margin, new_final_margin = initial_margin+move,final_margin-move
-    # print
 
     # Check the move
     if not valid_state(*new_node.value):
         return False
     print(depth*'\t',new_node.value[0],new_node.value[1],depth)
     if valid_solution(*new_node.value):
-        # print(new_initial_margin, new_final_margin)
         global LAST_NODE
         LAST_NODE = new_node
         return True
@@ -52,6 +43,7 @@ def do_move(node, move, depth):
             if parent_node.parent == None:
                 break
             parent_node = parent_node.parent
+
     # Do more moves
     for move in moves:
         result = do_move(new_node,move,depth+1)

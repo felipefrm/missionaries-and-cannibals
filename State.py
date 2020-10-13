@@ -1,10 +1,3 @@
-# digraph nome {
-#     "(3,3,1),(0,0,0)" -> "(3,3,1),(0,0,0)";
-#     "(3,3,1),(0,0,0)" -> "(3,3,1),(0,0,0)";
-#     "(3,3,1),(0,0,0)" -> "(3,3,1),(0,0,0)";
-#     "(3,3,1),(0,0,0)" -> "(3,3,1),(0,0,0)";
-#     "(3,3,1),(0,0,0)" -> "(3,3,1),(0,0,0)";
-# }
 class State:
 
     def __init__(self, num_missionaries, num_cannibals, num_boats):
@@ -31,9 +24,6 @@ class State:
 
     def __eq__(self,other):
         for (k1,v1), (k2,v2) in zip(self.__dict__.items(),other.__dict__.items()):
-            # print(k1,v1,k2,v2)
-            # if k1!=k2:
-            #     raise SystemExit("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             if v1!=v2:
                 return False
         return True
