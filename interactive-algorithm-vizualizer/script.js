@@ -39,6 +39,13 @@ $(document).ready(function() {
       for (let i=0; i<state['right'].canibals; i++) {
         right.append('<div class="col-sm-1 canibal"></div>')
       }
+
+      $('input[name="leftMissionaries"]').val(state['left'].missionaries);
+      $('input[name="leftCanibals"]').val(state['left'].canibals);
+      $('input[name="rightMissionaries"]').val(state['right'].missionaries);
+      $('input[name="rightCanibals"]').val(state['right'].canibals);
+
+      updateButtonsState(state)
     }
 
     function updateBoat(boat) {
@@ -46,6 +53,31 @@ $(document).ready(function() {
       ship.empty();
       for (let i = 0; i < boat.count; i++) {
           ship.append(`<div class="col-sm-1 ${boat.crew[i]}"></div>`)
+      }
+
+    }
+
+    function updateButtonsState(state) {
+      const boatPosition = getBoatPosition()
+      if (state[boatPosition].missionaries === 0) {
+        $('#missionarieToBoat').attr('disabled','disabled');
+      }
+      else {
+        $('#missionarieToBoat').removeAttr('disabled');
+      }
+
+      if (state[boatPosition]. canibals === 0) {
+        $('#canibalToBoat').attr('disabled','disabled');
+      }
+      else {
+        $('#canibalToBoat').removeAttr('disabled');
+      }
+
+      if (boat.count === 0) {
+        $('#boat').attr('disabled','disabled');
+      }
+      else {
+        $('#boat').removeAttr('disabled');
       }
     }
 
@@ -125,7 +157,7 @@ $(document).ready(function() {
       }
 
       if (state.left.boat) {
-        move('.barco').x(370).end();
+        move('.barco').x(210).end();
         state.left.boat = false;
         state.right.boat = true;  
       }
