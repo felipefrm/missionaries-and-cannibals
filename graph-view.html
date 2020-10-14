@@ -1,94 +1,148 @@
 <html>
-<head>
-  <link rel="stylesheet" href="staticfiles/alchemy.min.css"/>
-  <link rel="stylesheet" type="text/css" href="staticfiles/styles/vendor.css">
-<style>
-.alchemy text {
-    display: block !important;
-}
-</style>
-</head>
-<body>
-  <div class="alchemy" id="alchemy"></div>
-  <script src="staticfiles/scripts/vendor.js"></script>
-  <script src="staticfiles/alchemy.js"></script>
-  <script type="text/javascript">
-    d3.selectAll(".alchemy text")
-    .style("display", "block")
-    // var json = require('data/out.json');
-    // console.log(json)
-    var xmlhttp = new XMLHttpRequest();
-    // // xmlhttp.onreadystatechange = function(){
-    // //     if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
-    // //         txt = xmlhttp.responseText;
-    // //     }
-    // // };
-    xmlhttp.onload = function(){
-        txt=this.responseText;
-    };
-    xmlhttp.open("GET","data/out.json",false);
-    xmlhttp.send();
-    // console.log(txt)
-    // var txt = '';
+    <head>
+        <style>
+         #cy {
+             /* width: 100%; */
+             /* height: 70%; */
+             display: block;
+             font-size: smaller;
+             background-color: red;
+             flex: 1 1 auto;
+         }
+         #top-bar {
+             /* height: 8%; */
+             /* width: 100%; */
+             flex: 0 1 7%;
+             margin-bottom: 0px !important;
+         }
+         .box {
+             display: flex;
+             flex-flow: column;
+             height: 100%;
+         }
+        </style>
 
-    // d3.json('data/out.json', function(d){
-    //     data_obj = d
-    data_obj = JSON.parse(txt)
-    var config = {
-        //dataSource: data_obj,
-        dataSource: 'data/out.json',
-        "nodeTypes": {"state_type": ["invalid",
-                                     "repeated",
-                                     "valid",
-                                     "final"]},
-        "edgeTypes": {"state_type": ["invalid",
-                                     "repeated",
-                                     "valid",
-                                     "final"]},
-        "nodeStyle": {
-            "invalid": {
-                color: "#b80b22",
-                borderColor: "#b80b22",
-            },
-            "repeated":{
-                color: "#e8e517",
-                borderColor: "#e8e517",
-            },
-            "valid": {
-                color: "#0da312",
-                borderColor: "#0da312",
-            },
-            "final": {
-                color: "#172ce8",
-                borderColor: "#172ce8",
-            }
-        },
-        "edgeStyle": {
-            "invalid": {
-                color: "#b80b22",
-            },
-            "repeated":{
-                color: "#e8e517",
-            },
-            "valid": {
-                color: "#0da312",
-            },
-            "final": {
-                color: "#172ce8",
-            }
-        }
-    }
-    alchemy = new Alchemy(config)
-    // function sleep(ms) {
-    //     return new Promise(resolve => setTimeout(resolve, ms));
-    // }
-    // async function cfs() {
-    //     await sleep(2000);
-    //     alchemy = new Alchemy(config)
-    // }
-    // cfs();
-    // })
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
+<script src="/dist/semantic.min.js"></script>
+    </head>
 
-  </script>
-</body>
+    <body>
+        <div class="box">
+            
+            <div id='top-bar' class="ui massive menu">
+               <a class="item">
+                    <i class="angle left icon"></i>
+                    Nó anterior
+                </a>
+                <a class="item">
+                    <i class="angle right icon"></i>
+                    Próximo nó
+                </a>
+                <div class="right menu">
+                    <div class="ui dropdown item">
+                        Language <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <a class="item">English</a>
+                            <a class="item">Russian</a>
+                            <a class="item">Spanish</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="ui primary button">Sign Up</div>
+                    </div>
+                </div>
+            </div>
+            <div id='cy'>
+            </div>
+        </div>
+
+
+        <script src="cytoscape.min.js"></script>
+        <script type="text/javascript">
+         function sleep(ms) {
+             return new Promise(resolve => setTimeout(resolve, ms));
+         }
+
+         var xmlhttp = new XMLHttpRequest();
+         var txt = '';
+         xmlhttp.onload = function(){
+             txt=this.responseText;
+         };
+         xmlhttp.open("GET","data/out.json",false);
+         xmlhttp.send();
+         data_obj = JSON.parse(txt)
+
+         var cy = cytoscape({
+
+             container: document.getElementById('cy'), // container to render in
+             minZoom: 0.5,
+             maxZoom: 3,
+             elements: [],
+             boxSelectionEnabled: false,
+             style: [ // the stylesheet for the graph
+                      {
+                          selector: 'node',
+                          style: {
+                              'background-color': 'data(color)',
+                              'label': 'data(label)'
+                              // 'width':10005,
+                              // 'height':10005,
+                              // 'shape': 'rectangle',
+                          }
+                      },
+
+                      {
+                          selector: 'edge',
+                          style: {
+                              'width': 3,
+                              'line-color': 'data(color)',
+                              'target-arrow-color': 'data(color)',
+                              'target-arrow-shape': 'triangle',
+                              'curve-style': 'bezier'
+                          }
+                      },
+                      {
+                          selector: 'label',
+                          style: {
+                              'font-size': 8,
+                              // 'font-weight': 'bold',
+                              'text-halign': 'center',
+                              'text-valign': 'top',
+                          }
+                      }
+
+             ],
+
+         });
+         var layout = {
+             name: 'breadthfirst',
+             directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
+             padding: 30, // padding on fit
+             spacingFactor: 0.55, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+         }
+
+         // data_obj.forEach(async function (element){
+         //     await sleep(1000);
+         //     await sleep(1000);
+         //     console.log(element)
+         // })
+         console.log(cy)
+         
+         // async function f(){
+
+         //     for(i in data_obj){
+         //         element = data_obj[i]
+         //         cy.add(element)
+
+         //         if (i%2==0){
+         //             l =cy.layout(layout)
+         //             l.run()
+         //             await sleep(1000);
+         //         }
+         //     }
+         // }
+         // f()
+        </script>
+    </body>
 </html>

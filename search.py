@@ -1,8 +1,10 @@
+import json
+import collections
+
 from State import *
 from Node import *
 from constants import *
 from utils import *
-import collections
 
 def valid_state(initial_margin,final_margin):
     if (initial_margin.num_missionaries < initial_margin.num_cannibals and initial_margin.num_missionaries) or \
@@ -85,5 +87,6 @@ while True:
         break
     parent_node = parent_node.parent
 
+    
 # print(nodes[5])
-# print(dicts_to_graphjson(*nodes_to_dicts(nodes[12])))
+print(json.dumps(nodes_to_elements(nodes[DEPTH_LIMIT])))
