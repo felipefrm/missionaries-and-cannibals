@@ -1,0 +1,94 @@
+<html>
+<head>
+  <link rel="stylesheet" href="staticfiles/alchemy.min.css"/>
+  <link rel="stylesheet" type="text/css" href="staticfiles/styles/vendor.css">
+<style>
+.alchemy text {
+    display: block !important;
+}
+</style>
+</head>
+<body>
+  <div class="alchemy" id="alchemy"></div>
+  <script src="staticfiles/scripts/vendor.js"></script>
+  <script src="staticfiles/alchemy.js"></script>
+  <script type="text/javascript">
+    d3.selectAll(".alchemy text")
+    .style("display", "block")
+    // var json = require('data/out.json');
+    // console.log(json)
+    var xmlhttp = new XMLHttpRequest();
+    // // xmlhttp.onreadystatechange = function(){
+    // //     if(xmlhttp.status == 200 && xmlhttp.readyState == 4){
+    // //         txt = xmlhttp.responseText;
+    // //     }
+    // // };
+    xmlhttp.onload = function(){
+        txt=this.responseText;
+    };
+    xmlhttp.open("GET","data/out.json",false);
+    xmlhttp.send();
+    // console.log(txt)
+    // var txt = '';
+
+    // d3.json('data/out.json', function(d){
+    //     data_obj = d
+    data_obj = JSON.parse(txt)
+    var config = {
+        //dataSource: data_obj,
+        dataSource: 'data/out.json',
+        "nodeTypes": {"state_type": ["invalid",
+                                     "repeated",
+                                     "valid",
+                                     "final"]},
+        "edgeTypes": {"state_type": ["invalid",
+                                     "repeated",
+                                     "valid",
+                                     "final"]},
+        "nodeStyle": {
+            "invalid": {
+                color: "#b80b22",
+                borderColor: "#b80b22",
+            },
+            "repeated":{
+                color: "#e8e517",
+                borderColor: "#e8e517",
+            },
+            "valid": {
+                color: "#0da312",
+                borderColor: "#0da312",
+            },
+            "final": {
+                color: "#172ce8",
+                borderColor: "#172ce8",
+            }
+        },
+        "edgeStyle": {
+            "invalid": {
+                color: "#b80b22",
+            },
+            "repeated":{
+                color: "#e8e517",
+            },
+            "valid": {
+                color: "#0da312",
+            },
+            "final": {
+                color: "#172ce8",
+            }
+        }
+    }
+    alchemy = new Alchemy(config)
+    // function sleep(ms) {
+    //     return new Promise(resolve => setTimeout(resolve, ms));
+    // }
+    // async function cfs() {
+    //     await sleep(2000);
+    //     alchemy = new Alchemy(config)
+    // }
+    // cfs();
+    // })
+
+  </script>
+</body>
+</html>
