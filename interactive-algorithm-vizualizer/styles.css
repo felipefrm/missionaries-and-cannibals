@@ -1,0 +1,66 @@
+.background {
+  background-color: darkgray;
+  width: 100%;
+  height: 200px;
+}
+
+.canibal {
+  background-color: red;
+  top: -10px;
+  width: 5px;
+  height: 10px;
+  margin: 0 5px;
+}
+
+.missionario {
+  background-color: blue;
+  top: -10px;
+  width: 5px;
+  height: 10px;
+  margin: 0 5px;
+}
+
+.cenario {
+  max-width: 300px;
+}
+
+.margem-esquerda {
+  /* position: relative; */
+  /* left: 0; */
+  background-color: darkkhaki;
+  /* width: 100px; */
+  height: 30px;
+}
+
+.margem-direita {
+  /* position: relative;
+  right: 0; */
+  background-color: darkkhaki;
+  /* width: 100px; */
+  height: 30px;
+}
+
+.rio {
+  /* position: relative;
+  left: 100px; */
+  background-color: aqua;
+  height: 30px;
+  /* width: 200px; */
+}
+
+.barco {
+  position: absolute;
+  left: 25%;
+  top: 20%;
+  background-color: brown;
+  width: 80px;
+  height: 20px;
+}
+
+.tripulantes {
+  position: absolute;
+}
+
+.tripulantes:first-child {
+  margin-left: 0px;
+}
