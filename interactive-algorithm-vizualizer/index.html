@@ -8,28 +8,50 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 <body>
-  <div class="background"></div>
-  <div id="margens" class="row">
-    <div class="col-md-3 margem-esquerda">
-      <div class="row">
+  <div class="layout">
+    <div class="cenario">
+      <div class="background"></div>
+      <div id="margens" class="row">
+        <div class="col-md-3 margem-esquerda">
+          <div class="row">
+          </div>
+        </div>
+        <div class="col-md-6 rio">
+          <div class="barco">
+            <div class="tripulantes row">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 margem-direita">
+          <div class="row">
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-6 rio"></div>
-    <div class="col-md-3 margem-direita">
-      <div class="row">
-      </div>
+    <div class="buttons-group">
+      <button id="missionarieToBoat">Embarcar missionario no barco</button>
+      <button id="canibalToBoat">Embarcar canibal no barco</button>
+      <button id="missionarieFromBoat">Desembarcar missionário do barco</button>
+      <button id="canibalFromBoat">Desembarcar canibal do barco</button>
+      <button id="boat">Movimenta barco</button>
     </div>
-  </div>
-  <div class="barco">
-    <div class="tripulantes row">
-    </div>
-  </div>
+    <div class="status">
+      <h3>Profundidade</h3>
+      <input type="text" name="" value="3" id="" readonly>
+      <h3><br>Esquerda</h3>
+      <h6>Missionarios: </h6>
+      <input type="text" name="" value="3" id="" readonly>
+      <h6>Canibais: </h6>
+      <input type="text" name="" value="3" id="" readonly>
+      <h3><br>Direita</h3>
+      <h6>Missionarios: </h6>
+      <input type="text" name="" value="0" id="" readonly>
+      <h6>Canibais: </h6>
+      <input type="text" name="" value="0" id="" readonly>
 
-  <button id="missionarieToBoat">Embarcar missionario no barco</button>
-  <button id="canibalToBoat">Embarcar canibal no barco</button>
-  <button id="missionarieFromBoat">Desembarcar missionário do barco</button>
-  <button id="canibalFromBoat">Desembarcar canibal do barco</button>
-  <button id="boat">Movimenta barco</button>
+    </div>
+  </div>
+  </div>
 
   <script
   src="https://code.jquery.com/jquery-3.5.1.min.js"

@@ -57,7 +57,7 @@ $(document).ready(function() {
 
     $('#boat').on('click', moveBoat)
 
-    
+
     function getBoatPosition() {
       if (state.right.boat) return 'right'
       else                  return 'left'
@@ -125,7 +125,7 @@ $(document).ready(function() {
       }
 
       if (state.left.boat) {
-        move('.barco').x(580).end();
+        move('.barco').x(370).end();
         state.left.boat = false;
         state.right.boat = true;  
       }
