@@ -59,18 +59,35 @@ $(document).ready(function() {
 
     function updateButtonsState(state) {
       const boatPosition = getBoatPosition()
-      if (state[boatPosition].missionaries === 0) {
+      if (state[boatPosition].missionaries === 0 || boat.count === 2) {
         $('#missionarieToBoat').attr('disabled','disabled');
       }
       else {
         $('#missionarieToBoat').removeAttr('disabled');
       }
 
-      if (state[boatPosition]. canibals === 0) {
+      if (state[boatPosition]. canibals === 0  || boat.count === 2) {
         $('#canibalToBoat').attr('disabled','disabled');
       }
       else {
         $('#canibalToBoat').removeAttr('disabled');
+      }
+
+      console.log(boat.crew)
+
+      if (boat.crew[0] !== 'missionario' && boat.crew[1] !== 'missionario') {
+        $('#missionarieFromBoat').attr('disabled', 'disabled');
+        console.log('desabilita entao eu')
+      }
+      else {
+        $('#missionarieFromBoat').removeAttr('disabled');
+      }
+
+      if (boat.crew[0] !== 'canibal' && boat.crew[1] !== 'canibal') {
+        $('#canibalFromBoat').attr('disabled', 'disabled');
+      }
+      else {
+        $('#canibalFromBoat').removeAttr('disabled');
       }
 
       if (boat.count === 0) {
