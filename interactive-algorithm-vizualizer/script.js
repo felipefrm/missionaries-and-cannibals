@@ -93,6 +93,58 @@ function updateButtonsState() {
     }
 }
 
+async function previousEvent() {
+    
+}
+
+async function nextEvent() {
+      
+    console.log('teste')
+
+    let lastState = 'State: Invalid, (3, 3, 1), (0, 0, 0)';    // estado anterior
+    lastState = lastState.replace("State: ", "");
+    lastState = lastState.replace("(", "");
+    lastState = lastState.replace(")", "");
+    lastState = lastState.replace("(", "");
+    lastState = lastState.replace(")", "");
+    let arraylastState = lastState.split(",");
+    
+    let currentState = 'State: Invalid, (3, 1, 0), (1, 2, 1)'; // estado atual
+    currentState = currentState.replace("State: ", "");
+    currentState = currentState.replace("(", "");
+    currentState = currentState.replace(")", "");
+    currentState = currentState.replace("(", "");
+    currentState = currentState.replace(")", "");
+    var arrayCurrentState = currentState.split(",");
+
+    if (arrayCurrentState[1] < 0 || arrayCurrentState[2] < 0 || arrayCurrentState[4] < 0 || arrayCurrentState[5] < 0) {
+        console.log('invalido')
+    }
+
+    diffMissionarie = Math.abs(arraylastState[1] - arrayCurrentState[1])
+    diffCanibal = Math.abs(arraylastState[2] - arrayCurrentState[2])
+
+    for(let i=0; i<diffMissionarie; i++) {
+      addMissionarieToBoat();
+    }
+
+    for(let i=0; i<diffCanibal; i++) {
+      addCanibalToBoat();
+    }
+
+    await moveBoat();
+
+    for(let i=0; i<diffMissionarie; i++) {
+      removeMissionarieToBoat();
+    }
+
+    for(let i=0; i<diffCanibal; i++) {
+      removeCanibalToBoat();
+    }
+
+    console.log(state)
+    console.log(boat)
+}
 
 function getBoatPosition() {
     if (state.right.boat) return 'right'
@@ -152,7 +204,7 @@ function removeCanibalToBoat() {
 }
 
 
-function moveBoat() {
+async function moveBoat() {
 
     console.log('inicio')
 
@@ -161,12 +213,12 @@ function moveBoat() {
     }
 
     if (state.left.boat) {
-        move('.barco').x(210).end();
+        await move('.barco').x(210).end();
         state.left.boat = false;
         state.right.boat = true;  
     }
     else {
-        move('.barco').x(0).end();
+        await move('.barco').x(0).end();
         state.right.boat = false;
         state.left.boat = true;
     }
@@ -184,3 +236,6 @@ $('#missionarieFromBoat').on('click', removeMissionarieToBoat)
 $('#canibalFromBoat').on('click', removeCanibalToBoat)   
 
 $('#boat').on('click', moveBoat)
+
+$('#previous').on('click', previousEvent)
+$('#next').on('click', nextEvent)
