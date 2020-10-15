@@ -50,14 +50,18 @@
                 </div>
                 <div class="right menu">
                     <div class="item" id="current-state-type">
-                        Validity
+                        State type
                     </div>
                     <div class="item" id="current-state">
                         State
                     </div>
-                    <div class="item" id="current-state-parent">
-                        Parent state
+                    <div class="item" id="parent-state-type">
+                        State type
                     </div>
+                    <div class="item" id="parent-state">
+                        State
+                    </div>
+
                     <div class="item" id='depth'>
                         Depth
                     </div>
@@ -201,6 +205,25 @@
              get data_history_position(){
                  return this._data_history_position
              }
+             set parent_node (value){
+                 this._parent_node = value
+                 var e = document.getElementById('parent-state-type')
+
+                 e.textContent = capitalizeFirstLetter(value['state_type'])
+
+                 var e = document.getElementById('parent-state-type')
+                 e.style['background-color'] = value['color']
+
+                 var e = document.getElementById('parent-state')
+                 e.textContent = value['state']
+                 e.style['background-color'] = value['color']
+             }
+
+             get parent_node(){
+                 return this._parent_node
+             }
+
+
              set current_node (value){
                  this._current_node = value
                  var e = document.getElementById('current-state-type')
@@ -241,6 +264,15 @@
                      var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
                      $("#depth").text(`Depth: ${distToJ}`)
                      $("#depth").text(`Depth: ${distToJ}`)
+
+                     let parent_node = this.cy.nodes()[this.cy.nodes().length-1].neighborhood()[0]
+                     if (parent_node){
+                         this.parent_node = {'state':parent_node.data('label'),
+                                           'state_type':parent_node.data('state_type'),
+                                           'color':parent_node.data('color')}
+                     }else{
+                         this.parent_node = {'state':'Undefined','state_type':'Undefined','color':'white'}
+                     }
                  }
              }
              back_one_step(){
@@ -257,6 +289,15 @@
                      var dijkstra = this.cy.elements().dijkstra(this.cy.nodes()[0]);
                      var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
                      $("#depth").text(`Depth: ${distToJ}`)
+
+                     let parent_node = this.cy.nodes()[this.cy.nodes().length-1].neighborhood()[0]
+                     if (parent_node){
+                         this.parent_node = {'state':parent_node.data('label'),
+                                           'state_type':parent_node.data('state_type'),
+                                           'color':parent_node.data('color')}
+                     }else{
+                         this.parent_node = {'state':'Undefined','state_type':'Undefined','color':'white'}
+                     }
                  }
              }
 
