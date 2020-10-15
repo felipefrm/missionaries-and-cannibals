@@ -89,4 +89,4 @@ while True:
 
     
 # print(nodes[5])
-print(json.dumps(nodes_to_elements(nodes[DEPTH_LIMIT])))
+open('data/algorithm-steps.json','w').write(json.dumps(nodes_to_elements(nodes[DEPTH_LIMIT])))

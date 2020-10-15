@@ -93,7 +93,7 @@
          xmlhttp.onload = function(){
              txt=this.responseText;
          };
-         xmlhttp.open("GET","data/out.json",false);
+         xmlhttp.open("GET","../data/algorithm-steps.json",false);
          xmlhttp.send();
          data_obj = JSON.parse(txt)
 
@@ -129,8 +129,8 @@
                       {
                           selector: 'label',
                           style: {
-                              'font-size': 8,
-                              // 'font-weight': 'bold',
+                              'font-size': 16,
+                              'font-weight': 'bold',
                               'text-halign': 'center',
                               'text-valign': 'top',
                           }
