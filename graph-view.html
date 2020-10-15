@@ -1,12 +1,13 @@
-<html>
+<html lang=”pt-br”>
     <head>
+        <meta charset=”UTF-8”>
+        <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <style>
          #cy {
              /* width: 100%; */
              /* height: 70%; */
              display: block;
              font-size: smaller;
-             background-color: red;
              flex: 1 1 auto;
          }
          #top-bar {
@@ -21,47 +22,70 @@
              height: 100%;
          }
         </style>
-
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/dist/semantic.min.css">
-<script src="/dist/semantic.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script> -->
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="node_modules/fomantic-ui/dist/semantic.min.css">
+        <!-- <link rel="stylesheet" type="text/css" href="node_modules/fomantic-ui/dist/semantic.min.js"> -->
+        <script src="node_modules/fomantic-ui/dist/semantic.min.js"></script>
+        <script src="node_modules/cytoscape/dist/cytoscape.min.js"></script>
     </head>
 
     <body>
         <div class="box">
-            
-            <div id='top-bar' class="ui massive menu">
-               <a class="item">
-                    <i class="angle left icon"></i>
-                    Nó anterior
-                </a>
-                <a class="item">
-                    <i class="angle right icon"></i>
-                    Próximo nó
-                </a>
+
+
+            <div id='top-bar' class="ui menu" >
+                <div id="back" class="item">
+                    <div class="ui button">
+                        <i class="angle left icon"></i>
+                        Back
+                    </div>
+                </div>
+                <div id="advance" class="item">
+                    <div class="ui button">
+                        <i class="angle right icon"></i>
+                        Next
+                    </div>
+                    
+                </div>
                 <div class="right menu">
-                    <div class="ui dropdown item">
-                        Language <i class="dropdown icon"></i>
-                        <div class="menu">
-                            <a class="item">English</a>
-                            <a class="item">Russian</a>
-                            <a class="item">Spanish</a>
-                        </div>
+                    <div class="item" id="current-state">
+                        State
+                    </div>
+                    <div class="item" id='depth'>
+                        Depth
                     </div>
                     <div class="item">
-                        <div class="ui primary button">Sign Up</div>
+                        <select id="layout" class="ui fluid dropdown" value="breadthfirst">
+                            <option value="breadthfirst" selected="selected">Breadth first</option>
+                            <option value="random">Random</option>
+                            <option value="grid">Grid</option>
+                            <option value="circle">Circle</option>
+                            <option value="cose">cose</option>
+                        </select>
                     </div>
                 </div>
             </div>
+            
             <div id='cy'>
             </div>
+
+            <div id="progress-bar" class="ui teal progress" style="width:50%;margin-left: auto;margin-right: auto;" data-percent="0">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="label">Progresso até a solução</div>
+            </div>
+
         </div>
 
 
-        <script src="cytoscape.min.js"></script>
+        <!-- <script src="cytoscape.min.js"></script> -->
+
+        <!-- <script data-main="main" src="node_modules/requirejs/require.js"></script> -->
         <script type="text/javascript">
-         function sleep(ms) {
-             return new Promise(resolve => setTimeout(resolve, ms));
+         function capitalizeFirstLetter(string) {
+             return string.charAt(0).toUpperCase() + string.slice(1);
          }
 
          var xmlhttp = new XMLHttpRequest();
@@ -115,11 +139,29 @@
              ],
 
          });
-         var layout = {
-             name: 'breadthfirst',
-             directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
-             padding: 30, // padding on fit
-             spacingFactor: 0.55, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+         var layouts = {
+             'breadthfirst':{
+                 name: 'breadthfirst',
+                 directed: true, // whether the tree is directed downwards (or edges can point in any direction if false)
+                 padding: 30, // padding on fit
+                 spacingFactor: 1.05, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+             },
+             'random':{
+                 name:'random'
+             },
+
+             'grid':{
+                 name:'grid'
+             },
+
+             'circle':{
+                 name:'circle'
+             },
+
+             'cose':{
+                 name:'cose',
+                 refresh: 100,
+             },
          }
 
          // data_obj.forEach(async function (element){
@@ -127,22 +169,124 @@
          //     await sleep(1000);
          //     console.log(element)
          // })
-         console.log(cy)
-         
-         // async function f(){
+         /* console.log(cy) */
 
-         //     for(i in data_obj){
-         //         element = data_obj[i]
-         //         cy.add(element)
+         data_history_position = 0
 
-         //         if (i%2==0){
-         //             l =cy.layout(layout)
-         //             l.run()
-         //             await sleep(1000);
-         //         }
-         //     }
-         // }
-         // f()
+         class GraphMoveHandler {
+             constructor(cy,layout,data_obj,data_history_position=0,current_state='Undefined') {
+                 this.cy = cy;
+                 this.layout = layout;
+                 this.data_obj = data_obj;
+                 this.data_history_position = data_history_position;
+                 this.current_state= current_state
+                 this.current_color = 'white'
+             }
+
+             set data_history_position(value){
+                 this._data_history_position = value
+                 /* var e = document.getElementById('progress-bar') */
+                 var val = Math.round(100*this.data_history_position*1.0/data_obj.length)
+                 var e = $("#progress-bar")
+                 /* e.attr("data-percent", val); */
+                 e.progress({percent:val});
+             }
+             get data_history_position(){
+                 return this._data_history_position
+             }
+             set current_state (value){
+                 this._current_state = value
+                 var e = document.getElementById('current-state')
+                 /* console.log(e) */
+                 e.textContent = 'State: '+capitalizeFirstLetter(value)
+
+
+                 if (this.cy.nodes().length > 0){
+                     e.textContent = e.textContent +', ' +this.cy.nodes()[this.cy.nodes().length-1].data('label')
+                 }
+                 
+             }
+             get current_state(){
+                 return this._current_state
+             }
+             
+             set current_color(value){
+                 this._current_color = value
+                 var e = document.getElementById('current-state')
+                 e.style['background-color']= value
+             }
+
+             get current_color(){
+                 return this._current_color
+             }
+             update_graph(){
+                 var l = this.cy.layout(this.layout)
+                 l.run()
+             }
+
+             progress_one_step(){
+                 if (this.data_obj.length - this.data_history_position >= 2){
+                     this.cy.add(this.data_obj[this.data_history_position])
+                     this.current_state = this.data_obj[this.data_history_position]['data']['state_type']
+                     this.current_color = this.data_obj[this.data_history_position]['data']['color']
+                     this.data_obj[this.data_history_position]
+                     if (typeof this.data_obj[this.data_history_position+1]['data']['source'] !== 'undefined'){
+                         this.cy.add(this.data_obj[this.data_history_position+1])
+                         this.data_history_position+=1
+                     }
+                     this.data_history_position+=1
+                     this.update_graph()
+                     var dijkstra = this.cy.elements().dijkstra(this.cy.nodes()[0]);
+                     var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
+                     $("#depth").text(`Depth: ${distToJ}`)
+                     $("#depth").text(`Depth: ${distToJ}`)
+this.cy.nodes()[this.cy.nodes().length-1]
+                 }
+             }
+             back_one_step(){
+                 if (this.data_history_position >= 0){
+
+                     /* console.log(this.data_obj[this.data_history_position].data.id) */
+                     /* this.cy.remove([]) */
+                     /* console.log(this.data_obj) */
+                     var collection = cy.nodes('[id = "'+this.data_obj[this.data_history_position-2]['data']['id'] +'"]');
+                     /* console.log(collection) */
+                     /* console.log(collection) */
+                     /* console.log(this.cy.elements()) */
+                     /* this.cy.remove([this.data_obj[this.data_history_position-2]]) */
+                     this.cy.remove(collection)
+                     this.data_history_position=cy.elements().length
+                     /* console.log(this.cy.nodes())
+                      * console.log(this.cy.nodes()[this.cy.nodes().length-1]) */
+
+                     this.current_state = this.cy.nodes()[this.cy.nodes().length-1].data('state_type')
+                     this.current_color = this.cy.nodes()[this.cy.nodes().length-1].data('color')
+                     this.update_graph()
+                     var dijkstra = this.cy.elements().dijkstra(this.cy.nodes()[0]);
+                     var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
+                     $("#depth").text(`Depth: ${distToJ}`)
+                 }
+             }
+
+         }
+         gmh = new GraphMoveHandler(cy,layouts[document.getElementById('layout').value],data_obj)
+         /* gmh.progress_one_step() */
+         document.getElementById('advance').addEventListener("click",function(){gmh.progress_one_step()})
+         document.getElementById('back').addEventListener("click",function(){gmh.back_one_step()})
+         document.getElementById('layout').addEventListener("change",function(){gmh.layout = layouts[this.value]; console.log(this.value)})
+         /* async function f(){
+          *     for(i in data_obj){
+          *         element = data_obj[i]
+          *         cy.add(element)
+
+          *         if (i%2==0){
+          *             l =cy.layout(layout)
+          *             l.run()
+          *             await sleep(1000);
+          *         }
+          *     }
+          * }
+          * f() */
         </script>
     </body>
 </html>
