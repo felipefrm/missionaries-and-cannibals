@@ -49,8 +49,14 @@
                     
                 </div>
                 <div class="right menu">
+                    <div class="item" id="current-state-type">
+                        Validity
+                    </div>
                     <div class="item" id="current-state">
                         State
+                    </div>
+                    <div class="item" id="current-state-parent">
+                        Parent state
                     </div>
                     <div class="item" id='depth'>
                         Depth
@@ -174,51 +180,45 @@
          data_history_position = 0
 
          class GraphMoveHandler {
-             constructor(cy,layout,data_obj,data_history_position=0,current_state='Undefined') {
+             constructor(cy,layout,data_obj,data_history_position=0,
+                         current_node={'state':'Undefined','state_type':'Undefined','color':'white'},
+                         parent_node={'state':'Undefined','state_type':'Undefined','color':'white'},
+             ) {
                  this.cy = cy;
                  this.layout = layout;
                  this.data_obj = data_obj;
                  this.data_history_position = data_history_position;
-                 this.current_state= current_state
-                 this.current_color = 'white'
+                 this.current_node = current_node
+                 this.parent_node = parent_node
              }
 
              set data_history_position(value){
                  this._data_history_position = value
-                 /* var e = document.getElementById('progress-bar') */
                  var val = Math.round(100*this.data_history_position*1.0/data_obj.length)
                  var e = $("#progress-bar")
-                 /* e.attr("data-percent", val); */
                  e.progress({percent:val});
              }
              get data_history_position(){
                  return this._data_history_position
              }
-             set current_state (value){
-                 this._current_state = value
+             set current_node (value){
+                 this._current_node = value
+                 var e = document.getElementById('current-state-type')
+
+                 e.textContent = capitalizeFirstLetter(value['state_type'])
+
+                 var e = document.getElementById('current-state-type')
+                 e.style['background-color'] = value['color']
+
                  var e = document.getElementById('current-state')
-                 /* console.log(e) */
-                 e.textContent = 'State: '+capitalizeFirstLetter(value)
-
-
-                 if (this.cy.nodes().length > 0){
-                     e.textContent = e.textContent +', ' +this.cy.nodes()[this.cy.nodes().length-1].data('label')
-                 }
-                 
-             }
-             get current_state(){
-                 return this._current_state
-             }
-             
-             set current_color(value){
-                 this._current_color = value
-                 var e = document.getElementById('current-state')
-                 e.style['background-color']= value
+                 e.textContent = value['state']
+                 e.style['background-color'] = value['color']
              }
 
-             get current_color(){
-                 return this._current_color
+             get current_node(){
+                 return this._current_node
              }
+
              update_graph(){
                  var l = this.cy.layout(this.layout)
                  l.run()
@@ -227,9 +227,10 @@
              progress_one_step(){
                  if (this.data_obj.length - this.data_history_position >= 2){
                      this.cy.add(this.data_obj[this.data_history_position])
-                     this.current_state = this.data_obj[this.data_history_position]['data']['state_type']
-                     this.current_color = this.data_obj[this.data_history_position]['data']['color']
-                     this.data_obj[this.data_history_position]
+                     this.current_node = {'state':this.data_obj[this.data_history_position]['data']['label'],
+                                           'state_type':this.data_obj[this.data_history_position]['data']['state_type'],
+                                           'color':this.data_obj[this.data_history_position]['data']['color']}
+                     /* this.data_obj[this.data_history_position] */
                      if (typeof this.data_obj[this.data_history_position+1]['data']['source'] !== 'undefined'){
                          this.cy.add(this.data_obj[this.data_history_position+1])
                          this.data_history_position+=1
@@ -240,27 +241,18 @@
                      var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
                      $("#depth").text(`Depth: ${distToJ}`)
                      $("#depth").text(`Depth: ${distToJ}`)
-this.cy.nodes()[this.cy.nodes().length-1]
                  }
              }
              back_one_step(){
                  if (this.data_history_position >= 0){
 
-                     /* console.log(this.data_obj[this.data_history_position].data.id) */
-                     /* this.cy.remove([]) */
-                     /* console.log(this.data_obj) */
                      var collection = cy.nodes('[id = "'+this.data_obj[this.data_history_position-2]['data']['id'] +'"]');
-                     /* console.log(collection) */
-                     /* console.log(collection) */
-                     /* console.log(this.cy.elements()) */
-                     /* this.cy.remove([this.data_obj[this.data_history_position-2]]) */
                      this.cy.remove(collection)
                      this.data_history_position=cy.elements().length
-                     /* console.log(this.cy.nodes())
-                      * console.log(this.cy.nodes()[this.cy.nodes().length-1]) */
 
-                     this.current_state = this.cy.nodes()[this.cy.nodes().length-1].data('state_type')
-                     this.current_color = this.cy.nodes()[this.cy.nodes().length-1].data('color')
+                     this.current_node = {'state':this.cy.nodes()[this.cy.nodes().length-1].data('label'),
+                                           'state_type':this.cy.nodes()[this.cy.nodes().length-1].data('state_type'),
+                                           'color':this.cy.nodes()[this.cy.nodes().length-1].data('color')}
                      this.update_graph()
                      var dijkstra = this.cy.elements().dijkstra(this.cy.nodes()[0]);
                      var distToJ = dijkstra.distanceTo(this.cy.nodes()[this.cy.nodes().length-1]);
