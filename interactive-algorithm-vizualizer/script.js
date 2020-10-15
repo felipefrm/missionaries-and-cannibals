@@ -94,22 +94,35 @@ function updateButtonsState() {
 }
 
 async function previousEvent() {
-    
+
 }
 
-async function nextEvent() {
-      
-    console.log('teste')
+async function nextEvent(lastState, currentState) {
 
-    let lastState = 'State: Invalid, (3, 3, 1), (0, 0, 0)';    // estado anterior
+    if (!arguments[0])    
+        lastState = 'State: Invalid, (3, 3, 1), (0, 0, 0)';    // estado anterior
     lastState = lastState.replace("State: ", "");
     lastState = lastState.replace("(", "");
     lastState = lastState.replace(")", "");
     lastState = lastState.replace("(", "");
     lastState = lastState.replace(")", "");
     let arraylastState = lastState.split(",");
+
+    state.left.missionaries = parseInt(arraylastState[1]);
+    state.left.canibals = parseInt(arraylastState[2]);
+    state.left.boat = arraylastState[3];
+    state.right.missionaries = parseInt(arraylastState[4]);
+    state.right.canibals = parseInt(arraylastState[5]);
+    state.right.boat = arraylastState[6];
+
+    console.log('qnd começa ', state['left'].missionaries)
+    console.log('qnd começa ', state['right'].missionaries)
+
+
+    updateState()
     
-    let currentState = 'State: Invalid, (3, 1, 0), (1, 2, 1)'; // estado atual
+    if (!arguments[1])    
+        currentState = 'State: Invalid, (3, 1, 0), (1, 2, 1)'; // estado atual
     currentState = currentState.replace("State: ", "");
     currentState = currentState.replace("(", "");
     currentState = currentState.replace(")", "");
@@ -118,11 +131,13 @@ async function nextEvent() {
     var arrayCurrentState = currentState.split(",");
 
     if (arrayCurrentState[1] < 0 || arrayCurrentState[2] < 0 || arrayCurrentState[4] < 0 || arrayCurrentState[5] < 0) {
-        console.log('invalido')
+        console.log('invalido');
     }
 
     diffMissionarie = Math.abs(arraylastState[1] - arrayCurrentState[1])
     diffCanibal = Math.abs(arraylastState[2] - arrayCurrentState[2])
+
+    // console.log(diffMissionarie, diffCanibal)
 
     for(let i=0; i<diffMissionarie; i++) {
       addMissionarieToBoat();
@@ -144,6 +159,7 @@ async function nextEvent() {
 
     console.log(state)
     console.log(boat)
+
 }
 
 function getBoatPosition() {
@@ -158,7 +174,9 @@ function addMissionarieToBoat() {
         ship.append('<div class="col-sm-1 missionario"></div>')
         boat.crew.push('missionario')
         boat.count++
+        console.log("antes do add ", boatPosition, state[boatPosition].missionaries)
         state[boatPosition].missionaries--;
+        console.log("depois de add ", boatPosition, state[boatPosition].missionaries)
         updateState()
         updateBoat()
     }
@@ -180,7 +198,6 @@ function addCanibalToBoat() {
 function removeMissionarieToBoat() {
     const boatPosition = getBoatPosition()
     const missionarieIndex = boat.crew.findIndex(ind => ind === 'missionario');
-    console.log(missionarieIndex)
     if (missionarieIndex !== -1) {
         boat.crew.splice(missionarieIndex, 1);
         boat.count--;
