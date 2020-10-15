@@ -187,6 +187,7 @@
              constructor(cy,layout,data_obj,data_history_position=0,
                          current_node={'state':'Undefined','state_type':'Undefined','color':'white'},
                          parent_node={'state':'Undefined','state_type':'Undefined','color':'white'},
+                         move_exit_handler=function(){},
              ) {
                  this.cy = cy;
                  this.layout = layout;
@@ -194,6 +195,7 @@
                  this.data_history_position = data_history_position;
                  this.current_node = current_node
                  this.parent_node = parent_node
+                 this.move_exit_handler = move_exit_handler
              }
 
              set data_history_position(value){
@@ -273,6 +275,7 @@
                      }else{
                          this.parent_node = {'state':'Undefined','state_type':'Undefined','color':'white'}
                      }
+                     this.move_exit_handler()
                  }
              }
              back_one_step(){
@@ -298,6 +301,7 @@
                      }else{
                          this.parent_node = {'state':'Undefined','state_type':'Undefined','color':'white'}
                      }
+                     this.move_exit_handler()
                  }
              }
 

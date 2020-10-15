@@ -19,19 +19,27 @@
                     height="504" frameBorder="0" scrolling="no"></iframe>
         </div>
     </body>
+
+    <script src="dist/jquery.min.js"></script>
     <script>
-
      var graph_view = document.getElementById('graph-view')
-     graph_view.addEventListener("load",
-                                 function(){
-                                     console.log(this.contentWindow.cy)
-     })
+     var gmh
      var game = document.getElementById('game')
-     game.addEventListener("load",
-                           function(){
-                               console.log(this.contentWindow.state)
-     })
-
+     var nextEvent
+     $(window).on('load', function() {
+         gmh = graph_view.contentWindow.gmh
+         /* console.log("EWQEWQWE")
+          * console.log(this.contentWindow) */
+         nextEvent = game.contentWindow.nextEvent
+         gmh.move_exit_handler = function(){
+             nextEvent(this.current_node['state_type'],
+                       this.current_node['state'],
+                       this.parent_node['state_type'],
+                       this.parent_node['state'])
+         }
+     });
+     
+     
      
     </script>
 </html>

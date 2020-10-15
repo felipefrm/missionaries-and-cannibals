@@ -97,35 +97,24 @@ async function previousEvent() {
 
 }
 
-async function nextEvent(lastState, currentState) {
+async function nextEvent(currentStateType,currentState, parentStateType,parentState) {
 
-    if (!arguments[0])    
-        lastState = 'State: Invalid, (3, 3, 1), (0, 0, 0)';    // estado anterior
-    lastState = lastState.replace("State: ", "");
-    lastState = lastState.replace("(", "");
-    lastState = lastState.replace(")", "");
-    lastState = lastState.replace("(", "");
-    lastState = lastState.replace(")", "");
-    let arraylastState = lastState.split(",");
+    if(currentStateType!=='Valid' || parentStateType!=='Valid')
+        console.log("invalid state")
+        return
+    parentState = parentState.replace("(", "");
+    parentState = parentState.replace(")", "");
+    let arrayParentState = parentState.split(",");
 
-    state.left.missionaries = parseInt(arraylastState[1]);
-    state.left.canibals = parseInt(arraylastState[2]);
-    state.left.boat = arraylastState[3];
-    state.right.missionaries = parseInt(arraylastState[4]);
-    state.right.canibals = parseInt(arraylastState[5]);
-    state.right.boat = arraylastState[6];
-
-    console.log('qnd começa ', state['left'].missionaries)
-    console.log('qnd começa ', state['right'].missionaries)
-
+    state.left.missionaries = parseInt(arrayParentState[1]);
+    state.left.canibals = parseInt(arrayParentState[2]);
+    state.left.boat = parseInt(arrayParentState[3]);
+    state.right.missionaries = parseInt(arrayParentState[4]);
+    state.right.canibals = parseInt(arrayParentState[5]);
+    state.right.boat = parseInt(arrayParentState[6]);
 
     updateState()
     
-    if (!arguments[1])    
-        currentState = 'State: Invalid, (3, 1, 0), (1, 2, 1)'; // estado atual
-    currentState = currentState.replace("State: ", "");
-    currentState = currentState.replace("(", "");
-    currentState = currentState.replace(")", "");
     currentState = currentState.replace("(", "");
     currentState = currentState.replace(")", "");
     var arrayCurrentState = currentState.split(",");
@@ -134,10 +123,8 @@ async function nextEvent(lastState, currentState) {
         console.log('invalido');
     }
 
-    diffMissionarie = Math.abs(arraylastState[1] - arrayCurrentState[1])
-    diffCanibal = Math.abs(arraylastState[2] - arrayCurrentState[2])
-
-    // console.log(diffMissionarie, diffCanibal)
+    diffMissionarie = Math.abs(arrayParentState[1] - arrayCurrentState[1])
+    diffCanibal = Math.abs(arrayParentState[2] - arrayCurrentState[2])
 
     for(let i=0; i<diffMissionarie; i++) {
       addMissionarieToBoat();
@@ -156,9 +143,6 @@ async function nextEvent(lastState, currentState) {
     for(let i=0; i<diffCanibal; i++) {
       removeCanibalToBoat();
     }
-
-    console.log(state)
-    console.log(boat)
 
 }
 
