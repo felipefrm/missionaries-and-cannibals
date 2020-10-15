@@ -1,14 +1,37 @@
 <html>
     <head>
+        <!-- iframe { vertical-align:bottom; } -->
+        <!-- <style>iframe { display:block; } </style> -->
+<style>iframe{
+    overflow:hidden;
+} </style>
+
+
     </head>
 
     <body>
-        <div id="main" style="text-align: center;"> 
+        <div id="main" style="text-align: center;width:calc(50%+960/2);"> 
 
-            <iframe src="game.html" frameBorder="0" width="960"  
+            <iframe id="game" src="game.html" frameBorder="0" width="960"  
                     height="504"></iframe>
-            <iframe name="left_side" src="graph-view.html" width="960"  
-                    height="504" frameBorder="0"></iframe>
+
+            <iframe id="graph-view" src="graph-view.html" width="960"  
+                    height="504" frameBorder="0" scrolling="no"></iframe>
         </div>
     </body>
+    <script>
+
+     var graph_view = document.getElementById('graph-view')
+     graph_view.addEventListener("load",
+                                 function(){
+                                     console.log(this.contentWindow.cy)
+     })
+     var game = document.getElementById('game')
+     game.addEventListener("load",
+                           function(){
+                               console.log(this.contentWindow.state)
+     })
+
+     
+    </script>
 </html>
