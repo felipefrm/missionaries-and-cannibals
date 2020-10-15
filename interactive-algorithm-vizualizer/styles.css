@@ -95,3 +95,16 @@ body {
   margin-left: 61%;
   margin-top: 20px;
 }
+/*
+.finalMessage {
+  position: absolute;
+  top: 25%;  
+  left: 30%;
+
+  transform: translate(-50%, -50%);
+                                    
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+} 
+*/

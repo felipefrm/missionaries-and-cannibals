@@ -18,9 +18,59 @@ $(document).ready(function() {
       count: 0,
     };
 
-    updateState(state);
+    updateState();
 
-    function updateState(state) {
+    // async function showLoserMsg() {
+      
+    //   let loserState = undefined
+    //   if (state['left'].canibals > state['left'].missionaries && getBoatPosition() === 'right')
+    //     loserState = `Lado esquerdo = (${state['left'].missionaries}, ${state['left'].canibals}, 0)`
+    //   else
+    //     loserState = `Lado direito = (${state['right'].missionaries}, ${state['right'].canibals}, 0)`
+
+    //   $('.finalMessage').html(`Você perdeu!<br>Motivo: ${loserState}`)
+      
+    //   await new Promise(r => setTimeout(r, 5000));
+
+    //   $('.finalMessage').empty()
+    // }
+
+    // async function showWinnerMsg() {
+    //   $('.finalMessage').html(`Parabéns, você ganhou!<br>Motivo: (${state['right'].missionaries}, ${state['right'].canibals}, 0)`);
+      
+    //   await new Promise(r => setTimeout(r, 5000));
+
+    //   $('.finalMessage').empty()
+
+    // }
+
+    // function resetState() {
+
+    //   state = {
+    //     left: {
+    //       missionaries: 3,
+    //       canibals: 3,
+    //       boat: true,
+    //     },
+    //     right: {
+    //       missionaries: 0,
+    //       canibals: 0,
+    //       boat: false
+    //     }
+    //   }
+  
+    //   const boat = {
+    //     crew: [],
+    //     count: 0,
+    //   };
+
+    //   updateState();
+    //   updateBoat();
+    //   updateButtonsState()
+    //   move('.barco').x(0).end();
+    // }
+
+    async function updateState() {
 
       const left = $('.margem-esquerda .row')
       left.empty()
@@ -45,10 +95,30 @@ $(document).ready(function() {
       $('input[name="rightMissionaries"]').val(state['right'].missionaries);
       $('input[name="rightCanibals"]').val(state['right'].canibals);
 
-      updateButtonsState(state)
+      // let missionariesInBoat = 0
+      // let canibalsInBoat = 0
+      // for (let i = 0; i < boat.crew.length; i++) {
+      //   boat.crew[i] === 'missionario' ? missionariesInBoat++ : canibalsInBoat++
+      // }
+
+      // if ((state['left'].canibals > state['left'].missionaries && getBoatPosition() === 'right') || (state['right'].canibals > state['right'].missionaries && getBoatPosition() === 'left')) {
+      //   showLoserMsg();
+      //   await new Promise(r => setTimeout(r, 5000));
+      //   resetState();
+      // }
+
+      // if (state['right'].canibals === 3 && state['right'].misisonaries === 3) {
+      //   showWinnerMsg();
+      //   await new Promise(r => setTimeout(r, 5000));
+      //   resetState();
+      // }
+
+      // console.log(state)
+
+      updateButtonsState()
     }
 
-    function updateBoat(boat) {
+    function updateBoat() {
       const ship = $('.tripulantes')
       ship.empty();
       for (let i = 0; i < boat.count; i++) {
@@ -57,7 +127,7 @@ $(document).ready(function() {
 
     }
 
-    function updateButtonsState(state) {
+    function updateButtonsState() {
       const boatPosition = getBoatPosition()
       if (state[boatPosition].missionaries === 0 || boat.count === 2) {
         $('#missionarieToBoat').attr('disabled','disabled');
@@ -73,11 +143,8 @@ $(document).ready(function() {
         $('#canibalToBoat').removeAttr('disabled');
       }
 
-      console.log(boat.crew)
-
       if (boat.crew[0] !== 'missionario' && boat.crew[1] !== 'missionario') {
         $('#missionarieFromBoat').attr('disabled', 'disabled');
-        console.log('desabilita entao eu')
       }
       else {
         $('#missionarieFromBoat').removeAttr('disabled');
@@ -120,8 +187,8 @@ $(document).ready(function() {
         boat.crew.push('missionario')
         boat.count++
         state[boatPosition].missionaries--;
-        updateState(state)
-        updateBoat(boat)
+        updateState()
+        updateBoat()
       }
     }
 
@@ -133,8 +200,8 @@ $(document).ready(function() {
         boat.crew.push('canibal')
         boat.count++
         state[boatPosition].canibals--;
-        updateState(state)
-        updateBoat(boat)
+        updateState()
+        updateBoat()
       }
     }
 
@@ -146,8 +213,8 @@ $(document).ready(function() {
         boat.crew.splice(missionarieIndex, 1);
         boat.count--;
         state[boatPosition].missionaries++;
-        updateState(state);
-        updateBoat(boat);
+        updateState();
+        updateBoat();
       }
     }
 
@@ -159,8 +226,8 @@ $(document).ready(function() {
         boat.crew.splice(canibalIndex, 1);
         boat.count--;
         state[boatPosition].canibals++;
-        updateState(state);
-        updateBoat(boat);
+        updateState();
+        updateBoat();
       }
     }
 
@@ -183,7 +250,7 @@ $(document).ready(function() {
         state.right.boat = false;
         state.left.boat = true;
       }
-      updateState(state); 
+      updateState(); 
     
     }
 
