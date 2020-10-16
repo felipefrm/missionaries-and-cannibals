@@ -230,26 +230,45 @@ $(document).ready(function() {
 
       
       if ((state['right'].missionaries !== 0 && state['right'].missionaries < state['right'].canibals && state['right'].boat === false)  || (state['left'].missionaries !== 0 && state['left'].missionaries < state['left'].canibals  && state['left'].boat === false)) {
-        finalMessage.html(`Você perdeu!<br>Estado: (${state['left'].missionaries}, ${state['left'].canibals}, ${boatLeft},) (${state['right'].missionaries}, ${state['right'].canibals}, ${boatRight})`)
-        await new Promise(r => setTimeout(r, 2000));
+        
+        finalMessage.html(`Você perdeu!`)
+        await new Promise(r => setTimeout(r, 4000));
         finalMessage.empty()
-        moveBoat()
+       
+        move.defaults = {
+          duration: 1500
+        }
+  
+        move('.barco').x(0).end();
         resetState(state, boat)
       }
 
       else if ((state['right'].missionaries + missionarieCount !== 0 && state['right'].missionaries + missionarieCount < state['right'].canibals + canibalCount && state['right'].boat === true)  || (state['left'].missionaries + missionarieCount !== 0 && state['left'].missionaries + missionarieCount < state['left'].canibals + canibalCount && state['left'].boat === true)) {
-        finalMessage.html(`Você perdeu!<br>Estado: (${state['left'].missionaries}, ${state['left'].canibals}, ${boatLeft},) (${state['right'].missionaries}, ${state['right'].canibals}, ${boatRight})`)
-        await new Promise(r => setTimeout(r, 2000));
+        
+        finalMessage.html(`Você perdeu!`)
+        await new Promise(r => setTimeout(r, 4000));
         finalMessage.empty()
-        moveBoat()
+
+        move.defaults = {
+          duration: 1500
+        }
+  
+        move('.barco').x(0).end();
         resetState(state, boat)
       }
 
       else if ((state['right'].missionaries + state['right'].canibals) === 6) {
-        finalMessage.html('Parabéns, você ganhou!<br>Estado: (0, 0, 0,) (3, 3, 1)')
+        
+        finalMessage.html('Parabéns, você ganhou!')
+        await new Promise(r => setTimeout(r, 4000));
         finalMessage.empty()
-        moveBoat()
-        resetState()
+        
+        move.defaults = {
+          duration: 1500
+        }
+  
+        move('.barco').x(0).end();
+        resetState(state, boat)
       }
     }
   })
