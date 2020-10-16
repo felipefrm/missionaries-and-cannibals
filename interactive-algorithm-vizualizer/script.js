@@ -63,9 +63,9 @@ async function nextEvent(currentStateType,currentState, parentStateType,parentSt
     state.left.missionaries = parseInt(arrayParentState[0]);
     state.left.canibals = parseInt(arrayParentState[1]);
     state.left.boat = parseInt(arrayParentState[2]);
-    state.right.missionaries = parseInt(arrayParentState[3]);
-    state.right.canibals = parseInt(arrayParentState[4]);
-    state.right.boat = parseInt(arrayParentState[5]);
+    state.right.missionaries = 3-parseInt(arrayParentState[0]);
+    state.right.canibals = 3-parseInt(arrayParentState[1]);
+    state.right.boat = 1-parseInt(arrayParentState[2]);
     updateState(state)
 
     if(state.right.boat){
@@ -76,7 +76,7 @@ async function nextEvent(currentStateType,currentState, parentStateType,parentSt
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    await sleep(10);
+    await sleep(50);
     currentState = currentState.replace("(", "");
     currentState = currentState.replace(")", "");
     currentState = currentState.replace("(", "");

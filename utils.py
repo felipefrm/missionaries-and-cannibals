@@ -23,7 +23,7 @@ def nodes_to_elements(nodes):
         elements.append({
             'data':{
                 'id': ids[node],
-                'label': ', '.join(list(map(str,node.value))),
+                'label':str(node.value),
                 'state_type': node.label,
                 'color': colors[node.label]['color'],
             }
