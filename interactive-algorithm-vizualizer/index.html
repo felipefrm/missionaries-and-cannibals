@@ -28,8 +28,6 @@
      var nextEvent
      $(window).on('load', function() {
          gmh = graph_view.contentWindow.gmh
-         /* console.log("EWQEWQWE")
-          * console.log(this.contentWindow) */
          nextEvent = game.contentWindow.nextEvent
          gmh.move_exit_handler = function(){
              nextEvent(this.current_node['state_type'],

@@ -49,7 +49,7 @@ async function nextEvent(currentStateType,currentState, parentStateType,parentSt
         count: 0,
     };
 
-    if(currentStateType!=='valid' || parentStateType!=='valid'){
+    if((currentStateType!=='valid' && currentStateType!=='final') || parentStateType!=='valid'){
         return
     }
 
@@ -118,9 +118,7 @@ function addMissionarieToBoat(state,boat) {
         ship.append('<div class="col-sm-1 missionario"></div>')
         boat.crew.push('missionario')
         boat.count++
-        console.log("antes do add ", boatPosition, state[boatPosition].missionaries)
         state[boatPosition].missionaries--;
-        console.log("depois de add ", boatPosition, state[boatPosition].missionaries)
         updateState(state)
         updateBoat(boat)
     }
@@ -154,7 +152,6 @@ function removeMissionarieToBoat(state,boat) {
 function removeCanibalToBoat(state,boat) {
     const boatPosition = getBoatPosition(state)
     const canibalIndex = boat.crew.findIndex(ind => ind === 'canibal');
-    console.log(canibalIndex)
     if (canibalIndex !== -1) {
         boat.crew.splice(canibalIndex, 1);
         boat.count--;
@@ -166,8 +163,6 @@ function removeCanibalToBoat(state,boat) {
 
 
 async function moveBoat(state,duration=500) {
-
-    console.log('inicio')
 
     move.defaults = {
         duration: duration
