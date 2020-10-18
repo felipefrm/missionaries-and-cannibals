@@ -27,7 +27,6 @@ def dfs(node, depth):
         return False
 
     nodes[DEPTH_LIMIT].append(node)
-    # open(DIRS['DATA']).write(nodes)
     if not valid_state(node.value):
         node.label='invalid'
         return False
@@ -71,7 +70,6 @@ LAST_NODE = None
 while True:
     DEPTH_LIMIT += 1
     if dfs(INITIAL_NODE,0):
-        # print("Solution!!")
         solution = True
         break
     if solution:
@@ -80,10 +78,10 @@ while True:
 parent_node = LAST_NODE
 
 while True:
-    # print(parent_node.value[0],parent_node.value[1])
+    
     print(parent_node.value)
     if parent_node.parent == None:
         break
     parent_node = parent_node.parent
-# print(nodes[5])
+
 open('data/algorithm-steps.json','w').write(json.dumps(nodes_to_elements(nodes[DEPTH_LIMIT])))
