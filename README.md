@@ -21,6 +21,6 @@
 ```
 
 #### Como executar o jogo:
-```
+
   *1.* Abra com o navegador o arquivo index.html da pasta 'game'.
-```
+
